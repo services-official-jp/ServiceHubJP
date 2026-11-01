@@ -1,0 +1,871 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#ffffff">
+  <meta
+    name="description"
+    content="Study Point!＋ 管理者専用ページ"
+  >
+
+  <title>管理画面 | Study Point!＋</title>
+
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+  <!-- ヘッダー -->
+  <header class="site-header">
+
+    <a href="./index.html" class="logo">
+      <span class="logo-icon">S</span>
+      <span>Study Point!＋</span>
+    </a>
+
+    <nav class="header-nav">
+      <a href="./index.html" class="nav-link">
+        サイトへ戻る
+      </a>
+    </nav>
+
+  </header>
+
+
+  <main class="main-container">
+
+    <section class="request-section">
+
+      <!-- ログイン画面 -->
+      <div id="login-section">
+
+        <div class="page-heading">
+
+          <span class="heading-label">ADMIN</span>
+
+          <h1>管理者ログイン</h1>
+
+          <p>
+            Study Point!＋の管理者専用ページです。
+          </p>
+
+        </div>
+
+
+        <div class="request-card">
+
+          <form id="admin-login-form">
+
+            <div class="form-group">
+
+              <label for="admin-email">
+                メールアドレス
+              </label>
+
+              <input
+                type="email"
+                id="admin-email"
+                name="email"
+                placeholder="メールアドレスを入力"
+                autocomplete="username"
+                required
+              >
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="admin-password">
+                パスワード
+              </label>
+
+              <input
+                type="password"
+                id="admin-password"
+                name="password"
+                placeholder="パスワードを入力"
+                autocomplete="current-password"
+                required
+              >
+
+            </div>
+
+
+            <button
+              type="submit"
+              class="primary-button"
+              id="login-button"
+            >
+              ログイン
+            </button>
+
+
+            <p
+              id="login-message"
+              class="form-message"
+              aria-live="polite"
+            ></p>
+
+          </form>
+
+        </div>
+
+      </div>
+
+
+      <!-- 管理画面 -->
+      <div id="admin-dashboard" class="hidden">
+
+        <div class="page-heading">
+
+          <span class="heading-label">
+            ADMIN DASHBOARD
+          </span>
+
+          <h1>管理画面</h1>
+
+          <p>
+            Study Point!＋のコンテンツを管理できます。
+          </p>
+
+        </div>
+
+
+        <!-- 管理者情報 -->
+        <div class="request-card admin-account-card">
+
+          <p id="admin-user"></p>
+
+          <button
+            type="button"
+            class="primary-button"
+            id="logout-button"
+          >
+            ログアウト
+          </button>
+
+        </div>
+
+
+        <!-- ========================================
+             コンテンツ管理
+        ========================================= -->
+
+        <section class="admin-content-section">
+
+          <div class="admin-section-heading">
+
+            <div>
+              <span class="heading-label">CONTENTS</span>
+              <h2>コンテンツ管理</h2>
+            </div>
+
+          </div>
+
+
+          <p class="admin-content-description">
+            学年・教科・単元・解説セットを管理します。
+          </p>
+
+
+          <!-- STEP 01：学年 -->
+          <div class="admin-content-card">
+
+            <div class="admin-content-card-heading">
+              <div>
+                <span class="admin-content-step">STEP 01</span>
+                <h3>学年を選択</h3>
+              </div>
+            </div>
+
+            <p class="admin-content-card-description">
+              管理する学年を選択してください。
+            </p>
+
+            <div class="admin-grade-grid">
+
+              <button type="button" class="admin-grade-button" data-grade="中1">
+                中学1年
+              </button>
+
+              <button type="button" class="admin-grade-button" data-grade="中2">
+                中学2年
+              </button>
+
+              <button type="button" class="admin-grade-button" data-grade="中3">
+                中学3年
+              </button>
+
+              <button type="button" class="admin-grade-button" data-grade="高1">
+                高校1年
+              </button>
+
+              <button type="button" class="admin-grade-button" data-grade="高2">
+                高校2年
+              </button>
+
+              <button type="button" class="admin-grade-button" data-grade="高3">
+                高校3年
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <!-- STEP 02：教科 -->
+          <div class="admin-content-card">
+
+            <div class="admin-content-card-heading">
+              <div>
+                <span class="admin-content-step">STEP 02</span>
+                <h3>教科管理</h3>
+              </div>
+            </div>
+
+            <p class="admin-content-card-description">
+              選択した学年に教科を追加・管理します。
+            </p>
+
+            <div id="admin-selected-grade" class="admin-selected-info">
+              先に学年を選択してください。
+            </div>
+
+            <form id="admin-subject-form" class="admin-add-form">
+
+              <div class="form-group">
+                <label for="admin-subject-name">教科名</label>
+
+                <input
+                  type="text"
+                  id="admin-subject-name"
+                  placeholder="例：数学"
+                  maxlength="50"
+                  required
+                  disabled
+                >
+              </div>
+
+              <button
+                type="submit"
+                class="primary-button"
+                id="add-subject-button"
+                disabled
+              >
+                教科を追加
+              </button>
+
+            </form>
+
+            <div
+              id="admin-subject-message"
+              class="admin-content-message"
+              aria-live="polite"
+            ></div>
+
+            <div
+              id="admin-subject-list"
+              class="admin-item-list"
+            ></div>
+
+          </div>
+
+
+          <!-- STEP 03：単元 -->
+          <div class="admin-content-card">
+
+            <div class="admin-content-card-heading">
+              <div>
+                <span class="admin-content-step">STEP 03</span>
+                <h3>単元管理</h3>
+              </div>
+            </div>
+
+            <p class="admin-content-card-description">
+              教科を選択して、その中に単元を追加します。
+            </p>
+
+            <div id="admin-selected-subject" class="admin-selected-info">
+              先に教科を選択してください。
+            </div>
+
+            <form id="admin-unit-form" class="admin-add-form">
+
+              <div class="form-group">
+                <label for="admin-unit-name">単元名</label>
+
+                <input
+                  type="text"
+                  id="admin-unit-name"
+                  placeholder="例：正負の数"
+                  maxlength="100"
+                  required
+                  disabled
+                >
+              </div>
+
+              <button
+                type="submit"
+                class="primary-button"
+                id="add-unit-button"
+                disabled
+              >
+                単元を追加
+              </button>
+
+            </form>
+
+            <div
+              id="admin-unit-message"
+              class="admin-content-message"
+              aria-live="polite"
+            ></div>
+
+            <div
+              id="admin-unit-list"
+              class="admin-item-list"
+            ></div>
+
+          </div>
+
+
+          <!-- STEP 04：解説セット -->
+          <div class="admin-content-card">
+
+            <div class="admin-content-card-heading">
+              <div>
+                <span class="admin-content-step">STEP 04</span>
+                <h3>解説セット管理</h3>
+              </div>
+            </div>
+
+            <p class="admin-content-card-description">
+              単元を選択して、解説セットを作成します。
+            </p>
+
+            <div id="admin-selected-unit" class="admin-selected-info">
+              先に単元を選択してください。
+            </div>
+
+
+            <!-- 解説セット作成フォーム -->
+            <div id="admin-set-editor" class="hidden">
+
+              <form id="admin-set-form">
+
+                <div class="form-group">
+
+                  <label for="admin-set-title">
+                    解説セットのタイトル
+                  </label>
+
+                  <input
+                    type="text"
+                    id="admin-set-title"
+                    placeholder="例：正負の数の基本"
+                    maxlength="150"
+                    required
+                  >
+
+                </div>
+
+
+                <div class="form-group">
+
+                  <label for="admin-set-description">
+                    説明（任意）
+                  </label>
+
+                  <textarea
+                    id="admin-set-description"
+                    rows="3"
+                    maxlength="1000"
+                    placeholder="解説セットの内容を入力してください。"
+                  ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                  <label for="admin-set-display-type">
+                    画像の表示形式
+                  </label>
+
+                  <select
+                    id="admin-set-display-type"
+                    required
+                  >
+                    <option value="single">
+                      1枚ずつ表示
+                    </option>
+
+                    <option value="carousel">
+                      複数画像をカルーセル表示
+                    </option>
+                  </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                  <label class="admin-publish-option">
+
+                    <input
+                      type="checkbox"
+                      id="admin-set-published"
+                    >
+
+                    <span>
+                      作成と同時に公開する
+                    </span>
+
+                  </label>
+
+                  <p class="admin-form-note">
+                    チェックを外すと下書きとして保存されます。
+                  </p>
+
+                </div>
+
+
+                <button
+                  type="submit"
+                  class="primary-button"
+                  id="add-set-button"
+                >
+                  解説セットを作成
+                </button>
+
+
+                <p
+                  id="admin-set-message"
+                  class="admin-content-message"
+                  aria-live="polite"
+                ></p>
+
+              </form>
+
+            </div>
+
+
+            <!-- 解説セット一覧 -->
+            <div class="admin-set-list-heading">
+              <h4>登録済みの解説セット</h4>
+            </div>
+
+            <div
+              id="admin-set-list-message"
+              class="admin-content-message"
+              aria-live="polite"
+            ></div>
+
+            <div
+              id="admin-set-list"
+              class="admin-item-list"
+            ></div>
+
+
+            <!-- ========================================
+                 STEP 05：画像管理
+            ========================================= -->
+
+            <div
+              id="admin-image-editor"
+              class="admin-image-editor hidden"
+            >
+
+              <div class="admin-image-section-heading">
+
+                <span class="admin-content-step">
+                  STEP 05
+                </span>
+
+                <h3>画像管理</h3>
+
+              </div>
+
+
+              <div
+                id="admin-selected-set"
+                class="admin-selected-info"
+              >
+                解説セットを選択してください。
+              </div>
+
+
+              <p class="admin-content-card-description">
+                選択した解説セットに画像を追加できます。
+                画像は1枚ずつでも、複数枚まとめてでも登録できます。
+              </p>
+
+
+              <!-- 画像アップロードフォーム -->
+              <form
+                id="admin-image-form"
+                class="admin-image-form"
+              >
+
+                <div class="form-group">
+
+                  <label for="admin-image-files">
+                    アップロードする画像
+                  </label>
+
+                  <input
+                    type="file"
+                    id="admin-image-files"
+                    accept="image/jpeg,image/png,image/webp"
+                    multiple
+                    required
+                  >
+
+                  <p class="admin-form-note">
+                    対応形式：JPEG・PNG・WebP
+                    <br>
+                    画像1枚につき最大10MBです。
+                    複数枚をまとめて選択することもできます。
+                  </p>
+
+                </div>
+
+
+                <div
+                  id="admin-image-preview"
+                  class="admin-image-preview"
+                ></div>
+
+
+                <button
+                  type="submit"
+                  class="primary-button"
+                  id="upload-images-button"
+                >
+                  画像をアップロード
+                </button>
+
+
+                <p
+                  id="admin-image-message"
+                  class="admin-content-message"
+                  aria-live="polite"
+                ></p>
+
+              </form>
+
+
+              <!-- 登録済み画像 -->
+              <div class="admin-image-list-heading">
+                <h4>登録済みの画像</h4>
+              </div>
+
+              <div
+                id="admin-image-list-message"
+                class="admin-content-message"
+                aria-live="polite"
+              ></div>
+
+              <div
+                id="admin-image-list"
+                class="admin-image-list"
+              ></div>
+
+            </div>
+
+
+            <!-- ========================================
+                 STEP 06：クイズ管理
+            ========================================= -->
+
+            <div
+              id="admin-quiz-editor"
+              class="admin-quiz-editor hidden"
+            >
+
+              <div class="admin-image-section-heading">
+
+                <span class="admin-content-step">
+                  STEP 06
+                </span>
+
+                <h3>クイズ管理</h3>
+
+              </div>
+
+
+              <div
+                id="admin-selected-quiz-set"
+                class="admin-selected-info"
+              >
+                解説セットを選択してください。
+              </div>
+
+
+              <p class="admin-content-card-description">
+                選択した解説セットに、4択クイズを追加できます。
+                クイズは画像とは別に登録できます。
+              </p>
+
+
+              <!-- クイズ登録フォーム -->
+              <form
+                id="admin-quiz-form"
+                class="admin-quiz-form"
+              >
+
+                <div class="form-group">
+
+                  <label for="admin-quiz-question">
+                    問題文
+                  </label>
+
+                  <textarea
+                    id="admin-quiz-question"
+                    rows="3"
+                    maxlength="2000"
+                    placeholder="問題文を入力してください。"
+                    required
+                  ></textarea>
+
+                </div>
+
+
+                <div class="form-group">
+
+                  <label for="admin-quiz-choice-a">
+                    選択肢 A
+                  </label>
+
+                  <input
+                    type="text"
+                    id="admin-quiz-choice-a"
+                    maxlength="500"
+                    placeholder="選択肢A"
+                    required
+                  >
+
+                </div>
+
+
+                <div class="form-group">
+
+                  <label for="admin-quiz-choice-b">
+                    選択肢 B
+                  </label>
+
+                  <input
+                    type="text"
+                    id="admin-quiz-choice-b"
+                    maxlength="500"
+                    placeholder="選択肢B"
+                    required
+                  >
+
+                </div>
+
+
+                <div class="form-group">
+
+                  <label for="admin-quiz-choice-c">
+                    選択肢 C
+                  </label>
+
+                  <input
+                    type="text"
+                    id="admin-quiz-choice-c"
+                    maxlength="500"
+                    placeholder="選択肢C"
+                    required
+                  >
+
+                </div>
+
+
+                <div class="form-group">
+
+                  <label for="admin-quiz-choice-d">
+                    選択肢 D
+                  </label>
+
+                  <input
+                    type="text"
+                    id="admin-quiz-choice-d"
+                    maxlength="500"
+                    placeholder="選択肢D"
+                    required
+                  >
+
+                </div>
+
+
+                <div class="form-group">
+
+                  <label for="admin-quiz-correct-answer">
+                    正解
+                  </label>
+
+                  <select
+                    id="admin-quiz-correct-answer"
+                    required
+                  >
+                    <option value="a">A</option>
+                    <option value="b">B</option>
+                    <option value="c">C</option>
+                    <option value="d">D</option>
+                  </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                  <label for="admin-quiz-explanation">
+                    解説（任意）
+                  </label>
+
+                  <textarea
+                    id="admin-quiz-explanation"
+                    rows="3"
+                    maxlength="2000"
+                    placeholder="正解の理由や、間違えやすいポイントなどを入力できます。"
+                  ></textarea>
+
+                </div>
+
+
+                <button
+                  type="submit"
+                  class="primary-button"
+                  id="add-quiz-button"
+                >
+                  クイズを追加
+                </button>
+
+
+                <p
+                  id="admin-quiz-message"
+                  class="admin-content-message"
+                  aria-live="polite"
+                ></p>
+
+              </form>
+
+
+              <!-- 登録済みクイズ -->
+              <div class="admin-quiz-list-heading">
+                <h4>登録済みのクイズ</h4>
+              </div>
+
+
+              <div
+                id="admin-quiz-list-message"
+                class="admin-content-message"
+                aria-live="polite"
+              ></div>
+
+
+              <div
+                id="admin-quiz-list"
+                class="admin-quiz-list"
+              ></div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+        <!-- ========================================
+             要望管理
+        ========================================= -->
+
+        <section class="admin-requests-section">
+
+          <div class="admin-section-heading">
+
+            <div>
+              <span class="heading-label">REQUESTS</span>
+              <h2>要望管理</h2>
+            </div>
+
+            <span
+              id="requests-count"
+              class="admin-request-count"
+            >
+              未読 0件
+            </span>
+
+          </div>
+
+
+          <div
+            id="unread-notice"
+            class="admin-unread-notice hidden"
+            role="status"
+          ></div>
+
+
+          <div class="admin-request-toolbar">
+
+            <p>
+              新しい要望を確認できます。
+            </p>
+
+            <button
+              type="button"
+              id="refresh-requests-button"
+              class="admin-refresh-button"
+            >
+              <span aria-hidden="true">↻</span>
+              更新
+            </button>
+
+          </div>
+
+
+          <p
+            id="requests-message"
+            class="form-message"
+            aria-live="polite"
+          ></p>
+
+
+          <div
+            id="requests-list"
+            class="admin-requests-list"
+          ></div>
+
+        </section>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- フッター -->
+  <footer class="site-footer">
+
+    <p>© Study Point!＋</p>
+
+    <a href="./index.html">
+      トップへ戻る
+    </a>
+
+  </footer>
+
+
+  <script
+    type="module"
+    src="./js/admin.js"
+  ></script>
+
+</body>
+</html>

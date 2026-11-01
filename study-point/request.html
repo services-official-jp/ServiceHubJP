@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#ffffff">
+  <meta
+    name="description"
+    content="Study Point!＋へのご要望・リクエスト"
+  >
+
+  <title>ご要望・リクエスト | Study Point!＋</title>
+
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+  <!-- ヘッダー -->
+  <header class="site-header">
+
+    <a href="./index.html" class="logo">
+      <span class="logo-icon">S</span>
+      <span>Study Point!＋</span>
+    </a>
+
+    <nav class="header-nav">
+      <a href="./index.html" class="nav-link">
+        トップへ
+      </a>
+    </nav>
+
+  </header>
+
+
+  <main class="main-container">
+
+    <section class="request-section">
+
+      <div class="page-heading">
+
+        <span class="heading-label">
+          REQUEST
+        </span>
+
+        <h1>
+          ご要望・リクエスト
+        </h1>
+
+        <p>
+          Study Point!＋へのご要望やご意見をお聞かせください！
+        </p>
+
+      </div>
+
+
+      <div class="request-card">
+
+        <form id="request-form">
+
+          <!-- 要望の種類 -->
+          <div class="form-group">
+
+            <label for="request-category">
+              要望の種類 <span style="color: #e47777;">*</span>
+            </label>
+
+            <select
+              id="request-category"
+              name="category"
+              required
+            >
+
+              <option value="">
+                選択してください
+              </option>
+
+              <option value="単元を追加してほしい">
+                単元を追加してほしい
+              </option>
+
+              <option value="意見・改善点">
+                意見・改善点
+              </option>
+
+              <option value="その他">
+                その他
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- 学年 -->
+          <div class="form-group">
+
+            <label for="request-grade">
+              学年 <span style="color: #e47777;">*</span>
+            </label>
+
+            <select
+              id="request-grade"
+              name="grade"
+              required
+            >
+
+              <option value="">
+                学年を選択してください
+              </option>
+
+              <option value="中1">
+                中学1年
+              </option>
+
+              <option value="中2">
+                中学2年
+              </option>
+
+              <option value="中3">
+                中学3年
+              </option>
+
+              <option value="高1">
+                高校1年
+              </option>
+
+              <option value="高2">
+                高校2年
+              </option>
+
+              <option value="高3">
+                高校3年
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <!-- 内容 -->
+          <div class="form-group">
+
+            <label for="request-content">
+              要望・意見の内容 <span style="color: #e47777;">*</span>
+            </label>
+
+            <textarea
+              id="request-content"
+              name="content"
+              rows="7"
+              maxlength="1000"
+              placeholder="具体的な内容を入力してください！"
+              required
+            ></textarea>
+
+          </div>
+
+
+          <button
+            type="submit"
+            class="primary-button"
+          >
+            要望を送る
+          </button>
+
+
+          <p
+            id="form-message"
+            class="form-message"
+            aria-live="polite"
+          ></p>
+
+        </form>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- フッター -->
+  <footer class="site-footer">
+
+    <p>© Study Point!＋</p>
+
+    <a href="./index.html">
+      トップへ戻る
+    </a>
+
+  </footer>
+
+
+  <script
+    type="module"
+    src="./js/request.js"
+  ></script>
+
+</body>
+</html>

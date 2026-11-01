@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="theme-color" content="#ffffff">
+  <meta
+    name="description"
+    content="Study Point!＋ - 学習内容を楽しく復習しよう！"
+  >
+
+  <title>Study Point!＋</title>
+
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+
+  <!-- ヘッダー -->
+  <header class="site-header">
+    <a href="./index.html" class="logo">
+      <span class="logo-icon">S</span>
+      <span>Study Point!＋</span>
+    </a>
+
+    <nav class="header-nav">
+      <a href="./request.html" class="nav-link">
+        ご要望
+      </a>
+    </nav>
+  </header>
+
+
+  <main class="main-container">
+
+    <!-- トップ画面 -->
+    <section id="home-section" class="section">
+
+      <div class="hero">
+        <span class="hero-label">LEARN & GROW</span>
+
+        <h1>
+          今日の学びを、<br>
+          もっと楽しく！
+        </h1>
+
+        <p>
+          Study Point!＋の投稿をまとめて、<br>
+          いつでも復習できる学習サイトです。
+        </p>
+      </div>
+
+
+      <div class="selection-area">
+
+        <h2>学年を選択</h2>
+
+        <p class="section-description">
+          自分の学年を選んで学習を始めよう！
+        </p>
+
+
+        <div id="grade-list" class="grade-grid">
+
+          <button class="grade-card" data-grade="中1">
+            <span>中学1年</span>
+            <span class="grade-arrow">→</span>
+          </button>
+
+          <button class="grade-card" data-grade="中2">
+            <span>中学2年</span>
+            <span class="grade-arrow">→</span>
+          </button>
+
+          <button class="grade-card" data-grade="中3">
+            <span>中学3年</span>
+            <span class="grade-arrow">→</span>
+          </button>
+
+          <button class="grade-card" data-grade="高1">
+            <span>高校1年</span>
+            <span class="grade-arrow">→</span>
+          </button>
+
+          <button class="grade-card" data-grade="高2">
+            <span>高校2年</span>
+            <span class="grade-arrow">→</span>
+          </button>
+
+          <button class="grade-card" data-grade="高3">
+            <span>高校3年</span>
+            <span class="grade-arrow">→</span>
+          </button>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- 教科・単元・解説表示 -->
+    <section id="content-section" class="section hidden">
+
+      <button id="back-button" class="back-button">
+        ← 戻る
+      </button>
+
+
+      <div class="page-heading">
+
+        <span
+          id="selected-grade"
+          class="heading-label"
+        ></span>
+
+        <h1 id="page-title">
+          教科を選択
+        </h1>
+
+        <p id="page-description">
+          学習したい教科を選択してください。
+        </p>
+
+      </div>
+
+
+      <div
+        id="content-list"
+        class="content-grid"
+      ></div>
+
+
+      <!-- 解説セット表示 -->
+      <div
+        id="content-detail-list"
+        class="study-content-list hidden"
+      ></div>
+
+
+      <!-- クイズ専用画面 -->
+      <section
+        id="quiz-section"
+        class="study-quiz-screen hidden"
+      >
+
+        <div class="quiz-screen-heading">
+
+          <span class="quiz-screen-label">
+            CHALLENGE
+          </span>
+
+          <h2 id="quiz-screen-title">
+            確認クイズ
+          </h2>
+
+          <p id="quiz-screen-description">
+            学んだ内容を確認してみよう！
+          </p>
+
+        </div>
+
+
+        <!-- 問題表示 -->
+        <div
+          id="quiz-question-container"
+          class="quiz-question-container"
+        ></div>
+
+
+        <!-- 回答結果 -->
+        <div
+          id="quiz-answer-result"
+          class="quiz-answer-result hidden"
+        ></div>
+
+
+        <!-- 操作ボタン -->
+        <div class="quiz-navigation">
+
+          <button
+            id="quiz-next-button"
+            class="primary-button hidden"
+            type="button"
+          >
+            次の問題へ →
+          </button>
+
+          <button
+            id="quiz-retry-button"
+            class="primary-button hidden"
+            type="button"
+          >
+            もう一度挑戦する
+          </button>
+
+          <button
+            id="quiz-return-button"
+            class="back-button"
+            type="button"
+          >
+            ← 解説に戻る
+          </button>
+
+        </div>
+
+      </section>
+
+
+      <!-- 空のメッセージ -->
+      <div
+        id="empty-message"
+        class="empty-message hidden"
+      >
+
+        <div class="empty-icon">📚</div>
+
+        <h2>まだまとめがありません</h2>
+
+        <p>
+          この学年のまとめはまだありません。<br>
+          欲しい教科や単元、追加してほしい学習内容があれば、
+          ぜひ要望を送ってください！
+        </p>
+
+        <a
+          href="./request.html"
+          class="primary-button"
+        >
+          要望を送る →
+        </a>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- フッター -->
+  <footer class="site-footer">
+
+    <p>© Study Point!＋</p>
+
+    <a href="./request.html">
+      ご要望・リクエスト
+    </a>
+
+  </footer>
+
+
+  <script
+    type="module"
+    src="./js/main.js"
+  ></script>
+
+</body>
+</html>
