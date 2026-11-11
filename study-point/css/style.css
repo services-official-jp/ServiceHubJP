@@ -2414,3 +2414,221 @@ button {
   }
 
 }
+
+/* ========================================
+   管理画面：ウィザード形式
+======================================== */
+
+.admin-operation-panel {
+  margin: 30px 0;
+  padding: 32px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: var(--shadow);
+}
+
+.admin-operation-heading {
+  margin-bottom: 24px;
+}
+
+.admin-operation-heading h2 {
+  margin-top: 4px;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.admin-operation-heading p {
+  margin-top: 6px;
+  color: var(--text-sub);
+  font-size: 14px;
+}
+
+.admin-operation-choices {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.admin-operation-choice {
+  position: relative;
+  min-height: 118px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+  padding: 22px;
+  color: var(--text);
+  background: #f8faff;
+  border: 1px solid #e1eaf8;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.admin-operation-choice:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.admin-operation-choice::after {
+  content: "›";
+  position: absolute;
+  align-self: flex-end;
+  color: var(--primary);
+  font-size: 25px;
+}
+
+.admin-operation-choice-hint {
+  max-width: calc(100% - 20px);
+  color: var(--text-sub);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.admin-wizard {
+  margin-top: 24px;
+}
+
+.admin-wizard-progress {
+  margin-bottom: 22px;
+  padding: 18px 20px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 15px;
+}
+
+.admin-wizard-progress-text {
+  margin-bottom: 12px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.admin-wizard-progress-track {
+  width: 100%;
+  height: 8px;
+  overflow: hidden;
+  background: #edf1f8;
+  border-radius: 20px;
+}
+
+.admin-wizard-progress-bar {
+  width: 20%;
+  height: 100%;
+  background: var(--primary);
+  border-radius: inherit;
+  transition: width 0.25s ease;
+}
+
+.admin-wizard-panel > .admin-content-card {
+  margin-bottom: 0;
+}
+
+.admin-wizard-panel > .admin-content-card + .admin-content-card {
+  margin-top: 0;
+}
+
+.admin-wizard-panel > .admin-image-editor,
+.admin-wizard-panel > .admin-quiz-section {
+  margin-bottom: 22px;
+}
+
+.admin-wizard-panel > .admin-quiz-section {
+  padding: 25px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.admin-wizard-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.admin-wizard-back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 9px 16px;
+  color: var(--text-sub);
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.admin-wizard-back-button:hover {
+  color: var(--primary-dark);
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.admin-wizard-step-note {
+  color: var(--text-sub);
+  font-size: 12px;
+  text-align: right;
+}
+
+.admin-requests-back-button {
+  margin-bottom: 22px;
+}
+
+.admin-set-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 9px;
+}
+
+@media (max-width: 640px) {
+  .admin-operation-panel {
+    padding: 22px 17px;
+  }
+
+  .admin-operation-choices {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-operation-choice {
+    min-height: 98px;
+    padding: 18px;
+    font-size: 16px;
+  }
+
+  .admin-wizard-progress {
+    padding: 15px;
+  }
+
+  .admin-wizard-navigation {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-wizard-step-note {
+    text-align: left;
+  }
+
+  .admin-wizard-panel > .admin-quiz-section {
+    padding: 18px 15px;
+  }
+
+  .admin-set-item-actions .admin-item-select-button,
+  .admin-set-item-actions .admin-toggle-publish-button {
+    width: 100%;
+  }
+}

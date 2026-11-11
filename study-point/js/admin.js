@@ -111,6 +111,7 @@ let selectedGrade = null;
 let selectedSubject = null;
 let selectedUnit = null;
 let selectedContentSet = null;
+let editingContentSetId = null;
 
 
 /* ========================================
@@ -161,7 +162,7 @@ function formatDate(dateString) {
 // HTMLを変更せず、画像管理欄の下にクイズ管理欄を追加
 const quizSection = createElement(
   "section",
-  "admin-content-card admin-quiz-section"
+  "admin-content-card admin-quiz-section hidden"
 );
 
 const quizHeading = createElement(
@@ -400,6 +401,236 @@ quizSection.append(
 
 imageEditor.insertAdjacentElement("afterend", quizSection);
 
+/* ========================================
+   管理画面：ウィザード形式の画面構成
+======================================== */
+
+const adminContentSection = document.querySelector(".admin-content-section");
+const adminRequestsSection = document.querySelector(".admin-requests-section");
+
+const contentCards = Array.from(
+  adminContentSection.querySelectorAll(":scope > .admin-content-card")
+);
+
+const [gradeCard, subjectCard, unitCard, setCard] = contentCards;
+
+const operationPanel = createElement("section", "admin-operation-panel");
+const operationHeading = createElement("div", "admin-operation-heading");
+const operationLabel = createElement("span", "heading-label", "ADMIN MENU");
+const operationTitle = createElement("h2", "", "何をしますか？");
+const operationDescription = createElement(
+  "p",
+  "",
+  "行いたい操作を選択してください。"
+);
+
+operationHeading.append(operationLabel, operationTitle, operationDescription);
+
+const operationChoices = createElement("div", "admin-operation-choices");
+
+const addPointChoice = createElement(
+  "button",
+  "admin-operation-choice",
+  "Pointを追加・管理"
+);
+addPointChoice.type = "button";
+
+const addPointHint = createElement(
+  "span",
+  "admin-operation-choice-hint",
+  "学年・教科・単元・解説セットを順番に設定します。"
+);
+addPointChoice.appendChild(addPointHint);
+
+const requestsChoice = createElement(
+  "button",
+  "admin-operation-choice",
+  "要望を確認"
+);
+requestsChoice.type = "button";
+
+const requestsHint = createElement(
+  "span",
+  "admin-operation-choice-hint",
+  "サイトに届いたリクエストを確認します。"
+);
+requestsChoice.appendChild(requestsHint);
+
+operationChoices.append(addPointChoice, requestsChoice);
+operationPanel.append(operationHeading, operationChoices);
+adminContentSection.before(operationPanel);
+
+const wizardRoot = createElement("div", "admin-wizard");
+const wizardProgress = createElement("div", "admin-wizard-progress");
+const wizardProgressText = createElement(
+  "p",
+  "admin-wizard-progress-text",
+  "STEP 1 / 5　学年を選択"
+);
+const wizardProgressTrack = createElement("div", "admin-wizard-progress-track");
+const wizardProgressBar = createElement("div", "admin-wizard-progress-bar");
+wizardProgressTrack.appendChild(wizardProgressBar);
+wizardProgress.append(wizardProgressText, wizardProgressTrack);
+
+const wizardPanelsContainer = createElement(
+  "div",
+  "admin-wizard-panels"
+);
+
+const wizardPanelDefinitions = [
+  { step: 1, title: "学年を選択", element: gradeCard },
+  { step: 2, title: "教科を選択・追加", element: subjectCard },
+  { step: 3, title: "単元を選択・追加", element: unitCard },
+  { step: 4, title: "解説セットを選択・追加", element: setCard }
+];
+
+const wizardPanels = [];
+
+wizardPanelDefinitions.forEach(({ step, title, element }) => {
+  const panel = createElement("div", "admin-wizard-panel hidden");
+  panel.dataset.step = String(step);
+  panel.dataset.title = title;
+  panel.appendChild(element);
+  wizardPanelsContainer.appendChild(panel);
+  wizardPanels.push(panel);
+});
+
+// 画像・クイズは同じステップにまとめる
+const mediaPanel = createElement("div", "admin-wizard-panel hidden");
+mediaPanel.dataset.step = "5";
+mediaPanel.dataset.title = "クイズ・画像を設定";
+mediaPanel.append(imageEditor, quizSection);
+wizardPanelsContainer.appendChild(mediaPanel);
+wizardPanels.push(mediaPanel);
+
+const wizardNavigation = createElement("div", "admin-wizard-navigation");
+const wizardBackButton = createElement(
+  "button",
+  "admin-wizard-back-button",
+  "操作選択へ戻る"
+);
+wizardBackButton.type = "button";
+
+const wizardStepNote = createElement(
+  "p",
+  "admin-wizard-step-note",
+  "選択すると次のステップへ進みます。"
+);
+
+wizardNavigation.append(wizardBackButton, wizardStepNote);
+wizardRoot.append(
+  wizardProgress,
+  wizardPanelsContainer,
+  wizardNavigation
+);
+
+const contentDescription = adminContentSection.querySelector(
+  ".admin-content-description"
+);
+contentDescription.insertAdjacentElement("afterend", wizardRoot);
+
+// 要望画面から操作選択へ戻るボタン
+const requestsBackButton = createElement(
+  "button",
+  "admin-wizard-back-button admin-requests-back-button",
+  "操作選択へ戻る"
+);
+requestsBackButton.type = "button";
+adminRequestsSection.insertBefore(
+  requestsBackButton,
+  adminRequestsSection.firstChild
+);
+
+let currentWizardStep = 1;
+
+function showWizardStep(step) {
+  currentWizardStep = Math.min(5, Math.max(1, step));
+
+  wizardPanels.forEach(panel => {
+    panel.classList.toggle(
+      "hidden",
+      Number(panel.dataset.step) !== currentWizardStep
+    );
+  });
+
+  const currentPanel = wizardPanels.find(
+    panel => Number(panel.dataset.step) === currentWizardStep
+  );
+
+  const title = currentPanel?.dataset.title || "";
+  wizardProgressText.textContent =
+    `STEP ${currentWizardStep} / 5　${title}`;
+
+  wizardProgressBar.style.width =
+    `${(currentWizardStep / 5) * 100}%`;
+
+  wizardBackButton.textContent = currentWizardStep === 1
+    ? "操作選択へ戻る"
+    : "前のステップへ";
+
+  wizardStepNote.textContent = currentWizardStep === 5
+    ? "画像とクイズは、必要なものだけ登録できます。"
+    : "選択すると次のステップへ進みます。";
+
+  wizardRoot.classList.remove("hidden");
+}
+
+function showOperationMenu() {
+  operationPanel.classList.remove("hidden");
+  adminContentSection.classList.add("hidden");
+  adminRequestsSection.classList.add("hidden");
+}
+
+function startContentWorkflow() {
+  operationPanel.classList.add("hidden");
+  adminRequestsSection.classList.add("hidden");
+  adminContentSection.classList.remove("hidden");
+  showWizardStep(1);
+}
+
+function startRequestsWorkflow() {
+  operationPanel.classList.add("hidden");
+  adminContentSection.classList.add("hidden");
+  adminRequestsSection.classList.remove("hidden");
+  adminRequestsSection.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+addPointChoice.addEventListener("click", startContentWorkflow);
+requestsChoice.addEventListener("click", startRequestsWorkflow);
+
+wizardBackButton.addEventListener("click", () => {
+  if (currentWizardStep === 1) {
+    showOperationMenu();
+    return;
+  }
+
+  showWizardStep(currentWizardStep - 1);
+});
+
+requestsBackButton.addEventListener("click", showOperationMenu);
+
+showOperationMenu();
+
+// 解説セット編集のキャンセル
+const cancelSetEditButton = createElement(
+  "button",
+  "admin-item-select-button hidden",
+  "編集をキャンセル"
+);
+cancelSetEditButton.type = "button";
+addSetButton.insertAdjacentElement("afterend", cancelSetEditButton);
+
+cancelSetEditButton.addEventListener("click", () => {
+  editingContentSetId = null;
+  setForm.reset();
+  addSetButton.textContent = "解説セットを作成";
+  cancelSetEditButton.classList.add("hidden");
+  setMessage.textContent = "";
+});
+
 // 編集中のクイズID
 let editingQuizId = null;
 
@@ -418,6 +649,7 @@ function showDashboard(user) {
   adminDashboard.classList.remove("hidden");
 
   adminUser.textContent = `ログイン中：${user.email}`;
+  showOperationMenu();
 }
 
 
@@ -560,6 +792,8 @@ function resetContentManagement() {
   selectedSubject = null;
   selectedUnit = null;
   selectedContentSet = null;
+  editingContentSetId = null;
+  addSetButton.textContent = "解説セットを作成";
 
   gradeButtons.forEach(button => {
     button.classList.remove("is-selected");
@@ -595,6 +829,7 @@ function resetContentManagement() {
   setEditor.classList.add("hidden");
 
   resetSelectedSet();
+  showWizardStep(1);
 }
 
 
@@ -637,6 +872,7 @@ gradeButtons.forEach(button => {
     subjectMessage.textContent = "";
 
     await loadSubjects();
+    showWizardStep(2);
   });
 });
 
@@ -798,6 +1034,7 @@ async function selectSubject(subject, selectedItem) {
   resetSelectedUnit();
 
   await loadUnits();
+  showWizardStep(3);
 }
 
 
@@ -947,6 +1184,9 @@ function resetSelectedUnit() {
   setEditor.classList.add("hidden");
 
   setForm.reset();
+  editingContentSetId = null;
+  addSetButton.textContent = "解説セットを作成";
+  cancelSetEditButton.classList.add("hidden");
 
   setMessage.textContent = "";
   setListMessage.textContent = "";
@@ -976,12 +1216,16 @@ async function selectUnit(unit, selectedItem) {
   setEditor.classList.remove("hidden");
 
   setForm.reset();
+  editingContentSetId = null;
+  addSetButton.textContent = "解説セットを作成";
+  cancelSetEditButton.classList.add("hidden");
 
   setMessage.textContent = "";
 
   resetSelectedSet();
 
   await loadContentSets();
+  showWizardStep(4);
 }
 
 
@@ -1071,6 +1315,19 @@ async function loadContentSets() {
         "admin-set-item-actions"
       );
 
+      // 解説セット編集ボタン
+      const editButton = createElement(
+        "button",
+        "admin-item-select-button",
+        "解説セットを編集"
+      );
+
+      editButton.type = "button";
+
+      editButton.addEventListener("click", () => {
+        startEditContentSet(contentSet);
+      });
+
       // 画像・クイズ管理ボタン
       const imageButton = createElement(
         "button",
@@ -1102,7 +1359,7 @@ async function loadContentSets() {
         );
       });
 
-      actionArea.append(imageButton, toggleButton);
+      actionArea.append(editButton, imageButton, toggleButton);
 
       card.append(
         top,
@@ -1128,7 +1385,34 @@ async function loadContentSets() {
 
 
 /* ========================================
-   解説セット管理：新規作成
+   解説セット管理：編集開始
+======================================== */
+
+function startEditContentSet(contentSet) {
+  editingContentSetId = contentSet.id;
+
+  setTitleInput.value = contentSet.title || "";
+  setDescriptionInput.value = contentSet.description || "";
+  setDisplayTypeSelect.value = contentSet.display_type || "single";
+  setPublishedCheckbox.checked = Boolean(contentSet.is_published);
+
+  addSetButton.textContent = "変更を保存";
+  cancelSetEditButton.classList.remove("hidden");
+
+  showMessage(
+    setMessage,
+    "既存の解説セットを編集中です。変更後に保存してください。"
+  );
+
+  setForm.scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+
+/* ========================================
+   解説セット管理：新規作成・編集保存
 ======================================== */
 
 setForm.addEventListener("submit", async (event) => {
@@ -1159,45 +1443,98 @@ setForm.addEventListener("submit", async (event) => {
     return;
   }
 
+  const isEditing = Boolean(editingContentSetId);
+
   addSetButton.disabled = true;
-  addSetButton.textContent = "作成中...";
+  addSetButton.textContent = isEditing ? "保存中..." : "作成中...";
 
   try {
-    const { error } = await supabase
-      .from("sp_content_sets")
-      .insert({
-        unit_id: selectedUnit.id,
-        title,
-        description: description || null,
-        display_type: displayType,
-        is_published: isPublished
-      });
+    const contentSetData = {
+      title,
+      description: description || null,
+      display_type: displayType,
+      is_published: isPublished
+    };
 
-    if (error) {
-      throw error;
+    let savedContentSet = null;
+
+    if (isEditing) {
+      const { data, error } = await supabase
+        .from("sp_content_sets")
+        .update(contentSetData)
+        .eq("id", editingContentSetId)
+        .eq("unit_id", selectedUnit.id)
+        .select("*")
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      savedContentSet = data;
+
+      if (
+        selectedContentSet &&
+        selectedContentSet.id === savedContentSet.id
+      ) {
+        selectedContentSet = savedContentSet;
+      }
+
+      editingContentSetId = null;
+
+      setForm.reset();
+      cancelSetEditButton.classList.add("hidden");
+      await loadContentSets();
+
+      showMessage(
+        setMessage,
+        `「${title}」の変更を保存しました！`
+      );
+
+    } else {
+      const { data, error } = await supabase
+        .from("sp_content_sets")
+        .insert({
+          unit_id: selectedUnit.id,
+          ...contentSetData
+        })
+        .select("*")
+        .single();
+
+      if (error) {
+        throw error;
+      }
+
+      savedContentSet = data;
+
+      setForm.reset();
+      editingContentSetId = null;
+      cancelSetEditButton.classList.add("hidden");
+
+      await loadContentSets();
+
+      showMessage(
+        setMessage,
+        `「${title}」を作成しました！画像やクイズを続けて登録できます。`
+      );
+
+      await selectContentSet(savedContentSet, null);
     }
 
-    setForm.reset();
-
-    showMessage(
-      setMessage,
-      `「${title}」を作成しました！`
-    );
-
-    await loadContentSets();
-
   } catch (error) {
-    console.error("解説セットの作成に失敗しました:", error);
+    console.error("解説セットの保存に失敗しました:", error);
 
     showMessage(
       setMessage,
-      "解説セットを作成できませんでした。設定を確認してください。",
+      `解説セットを保存できませんでした。${error.message || "設定を確認してください。"}`,
       true
     );
 
   } finally {
     addSetButton.disabled = false;
-    addSetButton.textContent = "解説セットを作成";
+    addSetButton.textContent = editingContentSetId
+      ? "変更を保存"
+      : "解説セットを作成";
   }
 });
 
@@ -1268,6 +1605,7 @@ function resetSelectedSet() {
   selectedContentSet = null;
 
   imageEditor.classList.add("hidden");
+  quizSection.classList.add("hidden");
 
   selectedSetElement.textContent =
     "解説セットを選択してください。";
@@ -1301,9 +1639,12 @@ async function selectContentSet(contentSet, selectedCard) {
     card.classList.remove("is-selected");
   });
 
-  selectedCard.classList.add("is-selected");
+  if (selectedCard) {
+    selectedCard.classList.add("is-selected");
+  }
 
   imageEditor.classList.remove("hidden");
+  quizSection.classList.remove("hidden");
 
   selectedSetElement.textContent =
     `選択中の解説セット：${contentSet.title}`;
@@ -1324,6 +1665,8 @@ async function selectContentSet(contentSet, selectedCard) {
     loadImages(),
     loadQuizzes()
   ]);
+
+  showWizardStep(5);
 }
 
 
