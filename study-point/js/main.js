@@ -1,4 +1,3 @@
-
 import { supabase } from "./supabase.js";
 
 /* ========================================
@@ -83,12 +82,86 @@ let currentQuizScore = 0;
 let currentQuizAnswered = false;
 let currentQuizSetTitle = "";
 
+// 画像の先読みキャッシュ（単元を開いている間だけ保持）
+const imagePreloadCache = new Map();
+
+function clearImagePreloadCache() {
+
+  imagePreloadCache.clear();
+
+}
+
+
+function preloadImage(url) {
+
+  const cachedEntry = imagePreloadCache.get(url);
+
+  if (cachedEntry) {
+    return cachedEntry.promise;
+  }
+
+
+  const image = new Image();
+
+  image.decoding = "async";
+
+
+  let resolvePromise;
+
+  const promise = new Promise((resolve) => {
+    resolvePromise = resolve;
+  });
+
+
+  const entry = {
+    image,
+    promise
+  };
+
+
+  imagePreloadCache.set(url, entry);
+
+
+  image.onload = async () => {
+
+    try {
+      if (typeof image.decode === "function") {
+        await image.decode();
+      }
+    } catch (error) {
+      // decodeに対応していない画像でも、読み込み自体が成功していれば利用する
+    }
+
+    resolvePromise(true);
+
+  };
+
+
+  image.onerror = () => {
+
+    if (imagePreloadCache.get(url) === entry) {
+      imagePreloadCache.delete(url);
+    }
+
+    resolvePromise(false);
+
+  };
+
+
+  image.src = url;
+
+  return promise;
+
+}
+
 
 /* ========================================
    画面切り替え
 ======================================== */
 
 function showHome() {
+
+  clearImagePreloadCache();
 
   homeSection.classList.remove("hidden");
   contentSection.classList.add("hidden");
@@ -814,6 +887,15 @@ function createImageViewer(images, setTitle) {
 
   photo.alt = setTitle;
 
+  photo.decoding = "async";
+
+
+  const status = document.createElement("div");
+
+  status.className = "study-set-empty";
+
+  status.hidden = true;
+
 
   const imageUrl = (image) => {
 
@@ -835,15 +917,30 @@ function createImageViewer(images, setTitle) {
   let nextButton = null;
 
 
-  function updateImage() {
+  function preloadNearbyImages(index) {
 
-    const currentImage = images[currentIndex];
+    const firstIndex = Math.max(0, index - 5);
 
-    photo.src = imageUrl(currentImage);
+    const lastIndex = Math.min(
+      images.length - 1,
+      index + 5
+    );
 
-    photo.alt =
-      `${setTitle}（画像 ${currentIndex + 1}）`;
 
+    for (let imageIndex = firstIndex; imageIndex <= lastIndex; imageIndex++) {
+
+      if (imageIndex === index) {
+        continue;
+      }
+
+      preloadImage(imageUrl(images[imageIndex]));
+
+    }
+
+  }
+
+
+  function updateControls() {
 
     if (counter) {
       counter.textContent =
@@ -865,7 +962,77 @@ function createImageViewer(images, setTitle) {
   }
 
 
+  function updateImage(retry = false) {
+
+    const targetIndex = currentIndex;
+
+    const currentImage = images[targetIndex];
+
+    const url = imageUrl(currentImage);
+
+
+    updateControls();
+
+    status.hidden = false;
+    status.textContent = "画像を読み込んでいます...";
+
+
+    if (retry) {
+      imagePreloadCache.delete(url);
+    }
+
+
+    // 現在表示する画像を先に読み込み、その後に周辺画像を先読みする
+    const currentImagePromise = preloadImage(url);
+
+    preloadNearbyImages(targetIndex);
+
+
+    currentImagePromise.then((loaded) => {
+
+      // 読み込み中に別の画像へ移動していた場合、古い画像で上書きしない
+      if (targetIndex !== currentIndex) {
+        return;
+      }
+
+
+      if (loaded) {
+
+        photo.src = url;
+
+        photo.alt =
+          `${setTitle}（画像 ${targetIndex + 1}）`;
+
+        status.hidden = true;
+        status.textContent = "";
+
+        return;
+
+      }
+
+
+      status.textContent = "画像を読み込めませんでした。";
+
+
+      const retryButton = document.createElement("button");
+
+      retryButton.type = "button";
+      retryButton.className = "study-image-button";
+      retryButton.textContent = "再読み込み";
+
+      retryButton.addEventListener("click", () => {
+        updateImage(true);
+      });
+
+      status.appendChild(retryButton);
+
+    });
+
+  }
+
+
   viewer.appendChild(photo);
+  viewer.appendChild(status);
 
 
   if (images.length > 1) {
@@ -933,9 +1100,7 @@ function createImageViewer(images, setTitle) {
 
   } else {
 
-    photo.src = imageUrl(images[0]);
-
-    photo.alt = setTitle;
+    updateImage();
 
   }
 
@@ -1533,6 +1698,9 @@ function showEmptyMessage(title, message) {
 backButton.addEventListener("click", async () => {
 
   if (currentView === "sets") {
+
+    // 単元一覧へ戻るときに、この単元で保持した画像キャッシュを破棄
+    clearImagePreloadCache();
 
     currentUnit = null;
 
