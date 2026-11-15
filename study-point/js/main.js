@@ -1418,7 +1418,7 @@ function answerQuiz(selectedAnswer, selectedButton, choiceList) {
 
     quizAnswerResult.classList.add("is-incorrect");
 
-    resultTitle.textContent = "もう少し！";
+    resultTitle.textContent = "ざんねん！";
 
     resultMessage.textContent =
       `正解は ${correctAnswer} です。`;
@@ -1538,7 +1538,7 @@ function showQuizResult() {
   } else if (currentQuizScore === 0) {
 
     resultMessage.textContent =
-      "もう一度解説を確認して挑戦してみよう！";
+      "もう一度解説画像を確認してから挑戦してみよう！";
 
   } else {
 

@@ -2327,7 +2327,7 @@ quizForm.addEventListener("submit", async (event) => {
 
 // 要望一覧を取得
 async function loadRequests(showNotification = false) {
-  requestsMessage.textContent = "要望を読み込んでいます...";
+  requestsMessage.textContent = "読み込んでいます...";
 
   requestsList.replaceChildren();
 
